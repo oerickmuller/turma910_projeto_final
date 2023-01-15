@@ -15,7 +15,7 @@ services:
       - ./psql_start:/docker-entrypoint-initdb.d
 
   app:
-    # restart: always
+    restart: always
     platform: linux/amd64
     build:
       dockerfile: build/Dockerfile.app
