@@ -7,6 +7,8 @@ services:
     image: postgres:15-alpine
     ports:
       - "5433:5432"
+    expose:
+      - "5433"
     env_file:
       - ./env.dev.psql
     networks:
