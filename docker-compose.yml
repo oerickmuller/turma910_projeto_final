@@ -2,7 +2,6 @@ version: '3.8'
 
 services:
   postgres:
-    # restart: always
     platform: linux/amd64
     image: postgres:15-alpine
     ports:
@@ -19,6 +18,8 @@ services:
   app:
     restart: always
     platform: linux/amd64
+    depends_on:
+      - postgres
     build:
       dockerfile: build/Dockerfile.app
     ports:
