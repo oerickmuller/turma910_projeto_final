@@ -1,0 +1,52 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: psql_projeto_final
+    platform: linux/amd64
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5430:5432"
+    expose:
+      - "5432"
+    environment:
+      - POSTGRES_PASSWORD=adapass
+      - POSTGRES_USER=ada
+      - POSTGRES_DB=ada
+    networks:
+      - rede_ada_projeto_final
+    volumes:
+      - psql_start:/docker-entrypoint-initdb.d
+      - ./volumes/postgres:/var/lib/postgresql/data
+    
+  app:
+    container_name: app_projeto_final
+    image: app_projeto_final:1
+    build: 
+      dockerfile: build/Dockerfile.app
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      - PSQL_DBNAME=ada
+      - PSQL_PASSWORD=adapass
+      - PSQL_USER=ada
+      - PSQL_HOST=psql_projeto_final
+    networks:
+      - rede_ada_projeto_final
+    volumes:
+      - ./src:/app
+
+volumes:
+  psql_start:
+
+networks:
+  rede_ada_projeto_final: {}
