@@ -36,6 +36,7 @@ def set_on_redis(nome: str):
         return "Este nome já foi registrado anteriormente na base de dados. "
     
     cur.execute('INSERT INTO nomes VALUES (%s)', (nome.strip(), ))
+    psql_connect.commit()
     return "Nome registrado. "
 
     cur.close()
