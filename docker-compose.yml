@@ -15,13 +15,19 @@ services:
     volumes:
       - ./psql_start:/docker-entrypoint-initdb.d
       - ./volumes/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 
   app:
     restart: always
     platform: linux/amd64
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     build:
       dockerfile: build/Dockerfile.app
     ports:
